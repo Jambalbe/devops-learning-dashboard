@@ -15,7 +15,7 @@
 sudo iptables -L -v -n           # список правил со счетчиками
 sudo iptables -S                 # правила в формате команд
 sudo iptables -t nat -L -n       # правила NAT
-
+```bash
 #Добавление/удаление правил
 sudo iptables -A INPUT -p tcp --dport 22 -j ACCEPT   # добавить правило
 sudo iptables -I INPUT 1 -s 10.0.0.5 -j DROP         # вставить в начало
