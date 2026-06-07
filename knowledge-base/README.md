@@ -20,6 +20,7 @@
 - [Фаервол iptables](networking/iptables.md)
 - [NAT (SNAT/DNAT)](networking/nat.md)
 - [DNS и systemd-resolved](networking/dns.md)
+- [UFW — Uncomplicated Firewall](networking/ufw.md)
 
 ### Безопасность
 - [TLS/SSL и HTTPS](security/tls-ssl.md)
