@@ -1,13 +1,10 @@
-# devops-learning-dashboard
-Мой путь от Junior до Middle DevOps инженера
-
-
 # 🚀 DevOps Learning Dashboard
 
-**Инженер:** Ваше Имя  
+**Инженер:** Jambalbe  
 **Цель:** Middle DevOps инженер  
 **Старт:** 2026-06-07  
-**План:** 3 года
+**План:** 3 года  
+**Последнее обновление:** 2026-06-08
 
 ---
 
@@ -16,12 +13,12 @@
 | Модуль | Статус | Прогресс | Дата завершения |
 |--------|--------|----------|-----------------|
 | [Модуль 0: Быстрый старт](modules/00-linux/) | ✅ | ████████████ 100% | 2026-06-07 |
-| [Модуль 1: Linux](modules/00-linux/) | ✅ | ████████████ 100% | 2026-06-07 |
+| [Модуль 1: Linux основы](modules/00-linux/) | ✅ | ████████████ 100% | 2026-06-07 |
 | [Модуль 1.5: Сети](modules/01-networking/) | ✅ | ████████████ 100% | 2026-06-07 |
-| [Модуль 2: Git](modules/02-git/) | 🔄 | ███░░░░░░░░░ 25% | - |
+| [Модуль 2: Git углублённо](modules/02-git/) | ✅ | ████████████ 100% | 2026-06-08 |
 | Модуль 3: Docker | ⬚ | ░░░░░░░░░░░░ 0% | - |
-| Модуль 4: Kubernetes | ⬚ | ░░░░░░░░░░░░ 0% | - |
-| Модуль 5: CI/CD | ⬚ | ░░░░░░░░░░░░ 0% | - |
+| Модуль 4: CI/CD | ⬚ | ░░░░░░░░░░░░ 0% | - |
+| Модуль 5: Kubernetes | ⬚ | ░░░░░░░░░░░░ 0% | - |
 | Модуль 6: Terraform/Ansible | ⬚ | ░░░░░░░░░░░░ 0% | - |
 | Модуль 7: Мониторинг | ⬚ | ░░░░░░░░░░░░ 0% | - |
 | Модуль 8: DevSecOps | ⬚ | ░░░░░░░░░░░░ 0% | - |
@@ -33,12 +30,13 @@
 
 ## 🎯 Цели на 2026 год
 
-- [x] Настроить Linux сервер
+- [x] Настроить Linux сервер (Ubuntu 24.04 на VMware)
 - [x] Разобраться в сетях (TCP/IP, iptables, NAT, DNS)
-- [x] Настроить HTTPS сервер
-- [ ] Изучить Git (ветки, PR, rebase)
-- [ ] Написать первый CI/CD пайплайн
-- [ ] Поднять Docker контейнеры
+- [x] Настроить HTTPS сервер с самоподписанным сертификатом
+- [x] Изучить Git (ветки, merge, rebase, конфликты)
+- [x] Научиться работать с Pull Requests на GitHub
+- [ ] Написать первый CI/CD пайплайн (GitHub Actions)
+- [ ] Освоить Docker (Dockerfile, docker-compose)
 - [ ] Пройти курс по Kubernetes
 
 ---
@@ -49,10 +47,11 @@
 |-------|---------------|----------------|
 | Linux администрирование | ⭐⭐⭐⭐ | [конфиги](configs/) |
 | Сети (TCP/IP, маршрутизация) | ⭐⭐⭐⭐ | [tcpdump анализы](modules/01-networking/) |
-| iptables/NAT | ⭐⭐⭐⭐ | [правила](configs/iptables-rules.sh) |
+| iptables/NAT | ⭐⭐⭐⭐ | [правила](configs/iptables-rules.v4) |
 | DNS | ⭐⭐⭐⭐ | [dnsmasq конфиг](configs/dnsmasq.conf) |
 | TLS/SSL | ⭐⭐⭐ | [nginx конфиг](configs/nginx-https.conf) |
-| Git | ⭐⭐ | этот репозиторий |
+| Git (продвинутый) | ⭐⭐⭐⭐ | [чеклист](modules/02-git/checklist.md) |
+| GitHub / PR | ⭐⭐⭐⭐ | [Pull Request #1](https://github.com/Jambalbe/devops-learning-dashboard/pull/1) |
 | Docker | ⭐ | - |
 
 ---
@@ -61,24 +60,27 @@
 
 | Дата | Что сделано | Время |
 |------|-------------|-------|
-| 2026-06-07 | Установил Ubuntu на VMware, настроил SSH, nginx | 2ч |
-| 2026-06-07 | Изучил основы Linux (права, процессы, systemd) | 3ч |
-| 2026-06-07 | Разобрал сети: IP, маршрутизация, tcpdump | 4ч |
-| 2026-06-07 | Освоил iptables (фильтрация, NAT, логирование) | 3ч |
-| 2026-06-07 | Настроил DNS и systemd-resolved | 2ч |
-| 2026-06-07 | Поднял HTTPS сервер с самоподписанным сертификатом | 2ч |
-| 2026-06-08 | Создал этот репозиторий — DevOps Dashboard | 1ч |
+| 2026-06-07 | Установка Ubuntu, настройка SSH, nginx | 2ч |
+| 2026-06-07 | Linux (права, процессы, systemd) | 3ч |
+| 2026-06-07 | Сети: IP, маршрутизация, tcpdump | 4ч |
+| 2026-06-07 | iptables (фильтрация, NAT, логирование) | 3ч |
+| 2026-06-07 | DNS и systemd-resolved | 2ч |
+| 2026-06-07 | HTTPS с самоподписанным сертификатом | 2ч |
+| 2026-06-08 | Git: ветки, merge, конфликты | 3ч |
+| 2026-06-08 | Git: rebase, интерактивный rebase | 2ч |
+| 2026-06-08 | GitHub: Pull Requests, код-ревью | 2ч |
+| 2026-06-08 | Очистка истории Git | 1ч |
 
-**Всего часов:** ~17
+**Всего часов:** ~24ч
 
 ---
 
 ## 🔗 Полезные ссылки
 
-- [Мой сервер](http://192.168.1.147) (в локальной сети)
-- [Конфиг nginx](configs/nginx-https.conf)
-- [Правила iptables](configs/iptables-rules.sh)
-- [Дневник](daily-logs/)
+- [Репозиторий на GitHub](https://github.com/Jambalbe/devops-learning-dashboard)
+- [Pull Request #1 (добавление Git модуля)](https://github.com/Jambalbe/devops-learning-dashboard/pull/1)
+- [Чеклист Git модуля](modules/02-git/checklist.md)
+- [Конфиг nginx с HTTPS](configs/nginx-https.conf)
 
 ---
 
@@ -86,18 +88,15 @@
 
 | Название | Статус |
 |----------|--------|
-| Linux Basics | 🔄 |
+| Linux Basics | ✅ |
 | Networking Fundamentals | ✅ |
-| Git от А до Я | ⬚ |
+| Git от А до Я | ✅ |
+| Docker | ⬚ |
 
 ---
 
 ## 📚 Ресурсы
 
 - [The Linux Command Line](https://linuxcommand.org/tlcl.php)
-- [TCP/IP Guide](http://www.tcpipguide.com/)
-- [OpenSSL Cookbook](https://www.feistyduck.com/books/openssl-cookbook/)
-<<<<<<< HEAD
-### Изменение из ветки A
-=====
->>>>>>> feature/b
+- [Pro Git](https://git-scm.com/book/en/v2) (бесплатно)
+- [Oh My Git!](https://ohmygit.org/) — игра для практики Git
