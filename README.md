@@ -97,3 +97,4 @@
 - [The Linux Command Line](https://linuxcommand.org/tlcl.php)
 - [TCP/IP Guide](http://www.tcpipguide.com/)
 - [OpenSSL Cookbook](https://www.feistyduck.com/books/openssl-cookbook/)
+### Изменение из ветки A
