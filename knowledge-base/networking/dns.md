@@ -2,132 +2,428 @@
 
 ## Что такое DNS
 
-DNS (Domain Name System) преобразует доменные имена (google.com) в IP-адреса (142.250.109.138).
+**DNS (Domain Name System)** — система преобразования доменных имён в IP-адреса.
 
-## Просмотр DNS-настроек системы
+Пример:
+
+```text
+google.com → 142.250.109.138
+```
+
+Без DNS пользователям пришлось бы запоминать IP-адреса вместо удобных доменных имён.
+
+---
+
+# Просмотр DNS-настроек системы
 
 ```bash
-cat /etc/resolv.conf           # текущие DNS-серверы (часто ссылка на systemd-resolved)
-resolvectl status              # детальная информация (systemd-resolved)
-systemd-resolve --status       # альтернативная команда (старые версии)
-DNS-запросы вручную
-bash
-dig google.com                 # полный DNS-запрос (A-запись)
-dig -x 8.8.8.8                 # обратный lookup (IP → имя)
-dig @8.8.8.8 google.com        # использовать конкретный DNS-сервер
-dig google.com NS              # NS-записи (NS-серверы домена)
-dig google.com MX              # MX-записи (почтовые серверы)
+# Текущие DNS-серверы системы
+cat /etc/resolv.conf
 
-nslookup google.com            # простой запрос
-host google.com                # короткий запрос
-Файл /etc/hosts (локальные записи)
-bash
-cat /etc/hosts                 # формат: IP домен1 домен2
-# Пример:
-# 127.0.0.1 localhost
-# 192.168.1.100 myserver.local
+# Подробная информация о systemd-resolved
+resolvectl status
 
-# Добавить локальную запись
+# Альтернативная команда (старые версии)
+systemd-resolve --status
+```
+
+---
+
+# Выполнение DNS-запросов вручную
+
+## Утилита dig
+
+### Получить A-запись домена
+
+```bash
+dig google.com
+```
+
+### Обратное разрешение имени (PTR-запись)
+
+```bash
+dig -x 8.8.8.8
+```
+
+### Использовать конкретный DNS-сервер
+
+```bash
+dig @8.8.8.8 google.com
+```
+
+### Получить NS-записи
+
+```bash
+dig google.com NS
+```
+
+### Получить MX-записи
+
+```bash
+dig google.com MX
+```
+
+---
+
+## Утилита nslookup
+
+```bash
+nslookup google.com
+```
+
+---
+
+## Утилита host
+
+```bash
+host google.com
+```
+
+---
+
+# Файл /etc/hosts
+
+Локальная база сопоставления IP-адресов и имён хостов.
+
+Просмотр содержимого:
+
+```bash
+cat /etc/hosts
+```
+
+Пример:
+
+```text
+127.0.0.1       localhost
+192.168.1.100   myserver.local
+```
+
+---
+
+## Добавление локальной записи
+
+```bash
 echo "192.168.1.147 test.lab.local" | sudo tee -a /etc/hosts
+```
 
-# Проверить
+Проверка:
+
+```bash
 ping test.lab.local
-Systemd-resolved (современный DNS-резолвер)
-bash
-systemctl status systemd-resolved      # статус сервиса
-resolvectl status                      # DNS-серверы, домены поиска
-resolvectl statistics                  # статистика кэша
-sudo resolvectl flush-caches           # очистить кэш DNS
-resolvectl query google.com            # показать IP и интерфейс, через который был запрос
-#Настройка DNS через Netplan (Ubuntu)
-yaml
-# /etc/netplan/00-installer-config.yaml
+```
+
+---
+
+# Systemd-resolved
+
+Современный DNS-резолвер, используемый во многих дистрибутивах Linux.
+
+## Проверка статуса
+
+```bash
+systemctl status systemd-resolved
+```
+
+## Просмотр настроек
+
+```bash
+resolvectl status
+```
+
+## Статистика DNS-кэша
+
+```bash
+resolvectl statistics
+```
+
+## Очистка DNS-кэша
+
+```bash
+sudo resolvectl flush-caches
+```
+
+## Выполнить DNS-запрос
+
+```bash
+resolvectl query google.com
+```
+
+Показывает:
+
+* IP-адреса
+* интерфейс
+* DNS-сервер, выполнивший запрос
+
+---
+
+# Настройка DNS через Netplan (Ubuntu)
+
+Файл:
+
+```text
+/etc/netplan/00-installer-config.yaml
+```
+
+Пример конфигурации:
+
+```yaml
 network:
   version: 2
+
   ethernets:
     eth0:
       dhcp4: yes
+
       dhcp4-overrides:
-        use-dns: no               # игнорировать DNS от DHCP
+        use-dns: no
+
       nameservers:
         addresses:
           - 8.8.8.8
           - 8.8.4.4
+
         search:
           - lab.local
-Применить: sudo netplan apply
+```
 
-#Поднятие локального DNS-сервера (dnsmasq)
-bash
-# Установка
+Параметр:
+
+```yaml
+use-dns: no
+```
+
+означает игнорирование DNS-серверов, полученных через DHCP.
+
+---
+
+## Применение конфигурации
+
+```bash
+sudo netplan apply
+```
+
+---
+
+# Локальный DNS-сервер dnsmasq
+
+## Установка
+
+```bash
 sudo apt install dnsmasq -y
+```
 
-# Конфиг /etc/dnsmasq.d/lab.conf
-# Слушать локально
+---
+
+## Конфигурация
+
+Файл:
+
+```text
+/etc/dnsmasq.d/lab.conf
+```
+
+Пример:
+
+```ini
+# Слушать только локально
 interface=lo
 bind-interfaces
+
 # Не использовать /etc/resolv.conf
 no-resolv
+
 # Внешние DNS
 server=8.8.8.8
 server=8.8.4.4
-# Локальная зона
+
+# Локальный домен
 domain=lab.local
-# Статические A-записи
+
+# Статические записи
 address=/test.lab.local/192.168.1.147
 address=/api.lab.local/192.168.1.147
-# CNAME (алиас)
-cname=www.lab.local,test.lab.local
 
-# Запуск
+# CNAME
+cname=www.lab.local,test.lab.local
+```
+
+---
+
+## Запуск сервиса
+
+```bash
 sudo systemctl restart dnsmasq
 sudo systemctl enable dnsmasq
+```
 
-# Проверка
+---
+
+## Проверка работы
+
+```bash
 dig @127.0.0.1 test.lab.local
-Порядок резолвинга (приоритет)
-/etc/hosts (высший приоритет)
+```
 
-systemd-resolved (если активен) или указанные DNS-серверы
+---
 
-файл /etc/resolv.conf (если не symlink)
+# Порядок разрешения имён
 
-#Диагностика DNS-проблем
-bash
-# Проверить, отвечает ли DNS-сервер
+При поиске IP-адреса система обычно использует следующий порядок:
+
+1. `/etc/hosts`
+2. `systemd-resolved` (если используется)
+3. DNS-серверы из настроек сети
+4. `/etc/resolv.conf` (если не является symlink)
+
+---
+
+# Диагностика DNS-проблем
+
+## Проверить доступность DNS-сервера
+
+```bash
 dig @8.8.8.8 google.com +tcp
+```
 
-# Трассировка DNS-запроса (показать полный путь)
+---
+
+## Выполнить полную трассировку DNS
+
+```bash
 dig +trace google.com
+```
 
-# Проверить, что система резолвит
+Показывает весь путь запроса:
+
+```text
+Root DNS → TLD DNS → Authoritative DNS
+```
+
+---
+
+## Проверить системное разрешение имени
+
+```bash
 getent hosts google.com
+```
 
-# Посмотреть, какие DNS-запросы делает система (требует sudo)
+---
+
+## Перехват DNS-запросов
+
+```bash
 sudo tcpdump -i eth0 port 53 -n
-Очистка DNS-кэша в разных системах
-bash
-# systemd-resolved
+```
+
+Позволяет увидеть все DNS-запросы, проходящие через интерфейс.
+
+---
+
+# Очистка DNS-кэша
+
+## systemd-resolved
+
+```bash
 sudo resolvectl flush-caches
+```
 
-# dnsmasq
+---
+
+## dnsmasq
+
+```bash
 sudo systemctl restart dnsmasq
+```
 
-# nscd (если используется)
+---
+
+## nscd
+
+```bash
 sudo systemctl restart nscd
-#Часто используемые публичные DNS-серверы
-Провайдер	DNS-серверы
-Google	8.8.8.8, 8.8.4.4
-Cloudflare	1.1.1.1, 1.0.0.1
-OpenDNS	208.67.222.222, 208.67.220.220
-Quad9	9.9.9.9, 149.112.112.112
-#Краткая шпаргалка по DNS
-Команда	Назначение
-cat /etc/resolv.conf	DNS-серверы системы
-resolvectl status	Статус systemd-resolved
-dig domain	DNS-запрос (детально)
-nslookup domain	DNS-запрос (просто)
-dig -x IP	Обратный lookup
-dig @server domain	Запрос к конкретному DNS
-sudo resolvectl flush-caches	Очистить кэш
-sudo systemctl restart systemd-resolved	Перезапустить резолвер
+```
+
+---
+
+# Популярные публичные DNS-серверы
+
+| Провайдер  | DNS-серверы                        |
+| ---------- | ---------------------------------- |
+| Google     | `8.8.8.8`, `8.8.4.4`               |
+| Cloudflare | `1.1.1.1`, `1.0.0.1`               |
+| OpenDNS    | `208.67.222.222`, `208.67.220.220` |
+| Quad9      | `9.9.9.9`, `149.112.112.112`       |
+
+---
+
+# Шпаргалка по DNS
+
+| Команда                                   | Назначение                 |
+| ----------------------------------------- | -------------------------- |
+| `cat /etc/resolv.conf`                    | DNS-серверы системы        |
+| `resolvectl status`                       | Статус systemd-resolved    |
+| `dig domain`                              | Подробный DNS-запрос       |
+| `nslookup domain`                         | Простой DNS-запрос         |
+| `host domain`                             | Краткий DNS-запрос         |
+| `dig -x IP`                               | Обратное разрешение имени  |
+| `dig @server domain`                      | Запрос к конкретному DNS   |
+| `sudo resolvectl flush-caches`            | Очистить DNS-кэш           |
+| `sudo systemctl restart systemd-resolved` | Перезапустить DNS-резолвер |
+
+---
+
+# Полезные команды
+
+## Узнать используемые DNS-серверы
+
+```bash
+resolvectl dns
+```
+
+---
+
+## Проверить DNS для конкретного интерфейса
+
+```bash
+resolvectl status eth0
+```
+
+---
+
+## Проверить авторитетный DNS домена
+
+```bash
+dig google.com NS
+```
+
+---
+
+## Проверить почтовые серверы домена
+
+```bash
+dig google.com MX
+```
+
+---
+
+## Проверить TXT-записи
+
+```bash
+dig google.com TXT
+```
+
+---
+
+## Быстрый вывод только IP-адресов
+
+```bash
+dig +short google.com
+```
+
+---
+
+## Проверить внешний IP через DNS
+
+```bash
+dig +short myip.opendns.com @resolver1.opendns.com
+```
